@@ -17,17 +17,17 @@ local fd_primed = 0
 local fd_outcomes = {resists = 0, tries = 0}
 local consecutive_resists = 0
 
-local fda_sounds = {}
-fda_sounds[1] = "Sound\\Creature\\Mortar Team\\MortarTeamPissed9.wav"
-fda_sounds[2] = "Sound\\Creature\\Sporeling\\SporelingDeath.wav"
-fda_sounds[3] = "Sound\\Creature\\Voidwalker_VoidWraith\\Voidwalker_VoidWraithAggro.wav"
-fda_sounds[4] = "Sound\\Effects\\DeathImpacts\\mDeathImpactColossalSnowA.wav"
-fda_sounds[5] = "Sound\\Effects\\DeathImpacts\\mDeathImpactLargeWoodA.wav"
-fda_sounds[6] = "Sound\\Item\\Weapons\\Mace1HMetal\\1hMaceMetalHitChainCrit.wav"
-fda_sounds[7] = "Sound\\Item\\Weapons\\ParrySounds\\1hParryMetalHitMetalCritical.wav"
-fda_sounds[8] = "Sound\\Creature\\Abomination\\AbominationPissed5.wav"
-fda_sounds[9] = "Sound\\Doodad\\BellTollHorde.wav"
-fda_sounds[10] = "Sound\\Doodad\\BellTollAlliance.wav"
+local sounds = {}
+sounds[1] = "Sound\\Creature\\Mortar Team\\MortarTeamPissed9.wav"
+sounds[2] = "Sound\\Creature\\Sporeling\\SporelingDeath.wav"
+sounds[3] = "Sound\\Creature\\Voidwalker_VoidWraith\\Voidwalker_VoidWraithAggro.wav"
+sounds[4] = "Sound\\Effects\\DeathImpacts\\mDeathImpactColossalSnowA.wav"
+sounds[5] = "Sound\\Effects\\DeathImpacts\\mDeathImpactLargeWoodA.wav"
+sounds[6] = "Sound\\Item\\Weapons\\Mace1HMetal\\1hMaceMetalHitChainCrit.wav"
+sounds[7] = "Sound\\Item\\Weapons\\ParrySounds\\1hParryMetalHitMetalCritical.wav"
+sounds[8] = "Sound\\Creature\\Abomination\\AbominationPissed5.wav"
+sounds[9] = "Sound\\Doodad\\BellTollHorde.wav"
+sounds[10] = "Sound\\Doodad\\BellTollAlliance.wav"
 
 function fda_Defaults()
 	local default_prefs = {
@@ -63,8 +63,8 @@ function fda_OnLoad()
 	end
 
 	-- added by CGN v v v v
-	-- Ideally we wouldnt have to do this, but the creator decided to raw get values from the fda_Prefs 
-	-- rather than use a getter func that can set defaults if not existing :( 
+	-- Ideally we wouldnt have to do this, but the creator decided to raw get values from the fda_Prefs
+	-- rather than use a getter func that can set defaults if not existing :(
 
 	-- Check current saved values and fill in missing with defaults, because the user may have uypdated to a version with extra saved vars
 	local default_prefs = fda_Defaults()
@@ -75,11 +75,11 @@ function fda_OnLoad()
 	end
 end
 
-function fda_print(msg)
+function fda_Print(msg)
 	DEFAULT_CHAT_FRAME:AddMessage( colour .. chat_prefix .. "|r" .. msg );
 end
 
-function fda_debug_print(msg)
+function fda_DebugPrint(msg)
 	if fdalert_Prefs.debug == "on" then
 		DEFAULT_CHAT_FRAME:AddMessage( colour .. "FDA DEBUG: " .. "|r" .. msg );
 	end
@@ -87,28 +87,28 @@ end
 
 function fda_OnSlash(msg)
 	if (not msg or msg == "") then
-		fda_print("commands:")
-		fda_print("/fda help    -- detailed help")
-		fda_print("/fda enable")
-		fda_print("/fda message <message>")
-		fda_print("/fda chan <channel>")
-		fda_print("/fda wm <whisper message>")
-		fda_print("/fda wt <name>")
-		fda_print("/fda sound <number 1-10>")
-		fda_print("/fda tally")
-		fda_print("/fda test")
-		fda_print("/fda status")
-		fda_print("/fda reset")
+		fda_Print("commands:")
+		fda_Print("/fda help    -- detailed help")
+		fda_Print("/fda enable")
+		fda_Print("/fda message <message>")
+		fda_Print("/fda chan <channel>")
+		fda_Print("/fda wm <whisper message>")
+		fda_Print("/fda wt <name>")
+		fda_Print("/fda sound <number 1-10>")
+		fda_Print("/fda tally")
+		fda_Print("/fda test")
+		fda_Print("/fda status")
+		fda_Print("/fda reset")
 	elseif(msg == "help") then
 		fda_ShowHelp()
 	elseif(msg == "enable") then
 		fda_EnableToggle()
 	elseif(strsub(msg, 1, 5) == "sound") then
-		fda_SoundSet(msg)
+		fda_SetSound(msg)
 	elseif(strsub(msg, 1, 7) == "message") then
-		fda_MessageSet(msg)
+		fda_SetMessage(msg)
 	elseif(strsub(msg, 1, 4) == "chan") then
-		fda_ChannelSet(msg)
+		fda_SetChannel(msg)
 	elseif(strsub(msg, 1, 2) == "wm") then
 		fda_WMessageSet(msg)
 	elseif(strsub(msg, 1, 2) == "wt") then
@@ -124,7 +124,7 @@ function fda_OnSlash(msg)
 	elseif(msg == "debug") then
 		fda_DebugToggle()
 	else
-		fda_print("unknown option '" .. msg .. "' -- type '/fda' for help")
+		fda_Print("unknown option '" .. msg .. "' -- type '/fda' for help")
 	end
 end
 
@@ -163,11 +163,11 @@ end
 
 function fda_TryReset()
 	if GetTime() - fd_primed < 5 then
-		fda_debug_print("FD Success")
+		fda_DebugPrint("FD Success")
 		fd_primed = 0
 		consecutive_resists = 0
 	else
-		fda_debug_print("FD must have resisted")
+		fda_DebugPrint("FD must have resisted")
 	end
 end
 
@@ -185,7 +185,7 @@ function fda_OnEvent()
 			fd_outcomes.resists = fd_outcomes.resists + 1
 			consecutive_resists = consecutive_resists + 1
 			fd_primed = 0
-			fda_debug_print(tostring(consecutive_resists) .. " " .. tostring(fd_outcomes.resists))
+			fda_DebugPrint(tostring(consecutive_resists) .. " " .. tostring(fd_outcomes.resists))
 			-- ^ CGN ^ --
 			if(tostring(fdalert_Prefs.enabled) ==  "on") then
 				fda_SoundAlert()
@@ -195,10 +195,10 @@ function fda_OnEvent()
 	end
 	-- v added by CGN v --
 	if event == "UNIT_SPELLCAST_SUCCEEDED" then
-		-- fda_debug_print("1:" .. tostring(arg1) .. " 2:" .. tostring(arg2) .. " 3:" .. tostring(arg3) .. " 4:" .. tostring(arg4) .. " 5:" .. tostring(arg5))
+		-- fda_DebugPrint("1:" .. tostring(arg1) .. " 2:" .. tostring(arg2) .. " 3:" .. tostring(arg3) .. " 4:" .. tostring(arg4) .. " 5:" .. tostring(arg5))
 		if arg1 == "player" and arg2 == fd_spell_string then
 			fd_outcomes.tries = fd_outcomes.tries + 1
-			fda_Wait(0.5, fda_TryReset, self)
+			fda_Wait(0.5, fda_TryReset)
 		end
 	end
 	if event == "UNIT_SPELLCAST_SENT" then
@@ -208,14 +208,14 @@ function fda_OnEvent()
 	end
 	if event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD" then
 		local tries, resists, consecutive = tostring(fd_outcomes.tries), tostring(fd_outcomes.resists), tostring(consecutive_resists)
-		fda_debug_print("Resists: " .. resists)
-		fda_debug_print("Tries:" .. tries)
-		fda_debug_print("Consecutive:" .. consecutive)
+		fda_DebugPrint("Resists: " .. resists)
+		fda_DebugPrint("Tries:" .. tries)
+		fda_DebugPrint("Consecutive:" .. consecutive)
 		if tries == "0" or fdalert_Prefs.tally ~= "on" then
 			return
 		else
 			local percent = tostring(math.floor(((resists/tries) * 100)))
-			fda_print("Resists/Tries: "..resists.."/"..tries.." - ("..percent.."%)")
+			fda_Print("Resists/Tries: "..resists.."/"..tries.." - ("..percent.."%)")
 		end
 		fd_outcomes.tries, fd_outcomes.resists, consecutive_resists = 0, 0, 0
 	end
@@ -261,90 +261,57 @@ end
 
 function fda_EnableToggle()
 	if(fdalert_Prefs.enabled == "off") then
-		fda_print("addon enabled");
+		fda_Print("addon enabled");
 		fdalert_Prefs.enabled = "on";
-  return
+  		return
   else
-		fda_print("addon disabled");
+	fda_Print("addon disabled");
   	fdalert_Prefs.enabled = "off";
   end
 end
 
-function fda_MessageSet(msg)
-	fda_print("message changed to: " .. strsub(msg, 9));
+function fda_SetMessage(msg)
+	fda_Print("message changed to: " .. strsub(msg, 9));
 	fdalert_Prefs.message = strsub(msg, 9);
 end
 
-function fda_SoundSet(msg)
-	local sound_number = strsub(msg, 7)
-	if(strsub(msg, 7) == "1") then
-		fdalert_Prefs.sound = "Sound\\Creature\\Mortar Team\\MortarTeamPissed9.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "2") then
-		fdalert_Prefs.sound = "Sound\\Creature\\Sporeling\\SporelingDeath.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "3") then
-		fdalert_Prefs.sound = "Sound\\Creature\\Voidwalker_VoidWraith\\Voidwalker_VoidWraithAggro.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "4") then
-		fdalert_Prefs.sound = "Sound\\Effects\\DeathImpacts\\mDeathImpactColossalSnowA.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "5") then
-		fdalert_Prefs.sound = "Sound\\Effects\\DeathImpacts\\mDeathImpactLargeWoodA.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "6") then
-		fdalert_Prefs.sound = "Sound\\Item\\Weapons\\Mace1HMetal\\1hMaceMetalHitChainCrit.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "7") then
-		fdalert_Prefs.sound = "Sound\\Item\\Weapons\\ParrySounds\\1hParryMetalHitMetalCritical.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "8") then
-		fdalert_Prefs.sound = "Sound\\Creature\\Abomination\\AbominationPissed5.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "9") then
-		fdalert_Prefs.sound = "Sound\\Doodad\\BellTollHorde.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "10") then
-		fdalert_Prefs.sound = "Sound\\Doodad\\BellTollAlliance.wav"
-		fda_print("sound file changed to: " .. strsub(msg, 7));
-		fda_SoundAlert()
-	elseif(strsub(msg, 7) == "0" or strsub(msg, 7) == "off" or strsub(msg, 7) == "disable") then
+function fda_SetSound(msg)
+	local sound = strsub(msg, 7)
+	local sound_number = tonumber(sound)
+	local number_of_sounds = #sounds
+	fda_DebugPrint("sound, sound_number, num_of_sounds = " .. tostring(sound) .. " ".. tostring(sound_number) .. " " .. tostring(number_of_sounds))
+	if(sound == "0" or sound == "off" or sound == "disable" or sound_number == nil) then
 		fdalert_Prefs.sound = "0"
-		fda_print("sound turned off");
+		fda_Print("Sound turned off")
+	elseif sound_number > 0 and sound_number <= number_of_sounds then
+		fdalert_Prefs.sound = sounds[sound_number]
+		fda_Print("sound file changed to: " .. fdalert_Prefs.sound)
+		fda_SoundAlert()
 	else
-		fda_print("'" .. strsub(msg, 7).. "' not recognised. Valid choices are 1 to 10, or 0 for off.")
+		fda_Print("'" .. sound .. "' not recognised. Valid choices are 1 to " .. number_of_sounds .. ", or 0 for off.")
 	end
 end
 
-function fda_ChannelSet(msg)
+function fda_SetChannel(msg)
 	if(strsub(msg, 6) == "say" or strsub(msg, 6) == "yell" or strsub(msg, 6) == "emote" or strsub(msg, 6) == "party" or strsub(msg, 6) == "guild" or strsub(msg, 6) == "officer" or strsub(msg, 6) == "raid" or strsub(msg, 6) == "raid_warning" or strsub(msg, 6) == "1" or strsub(msg, 6) == "2" or strsub(msg, 6) == "3" or strsub(msg, 6) == "4" or strsub(msg, 6) == "5" or strsub(msg, 6) == "6" or strsub(msg, 6) == "7" or strsub(msg, 6) == "8" or strsub(msg, 6) == "9" or strsub(msg, 6) == "0") then
-		fda_print("channel changed to: " .. strsub(msg, 6));
+		fda_Print("channel changed to: " .. strsub(msg, 6));
 		fdalert_Prefs.channel = string.upper((strsub(msg, 6)));
   	return
   else
-  	fda_print("'" .. msg .. "' is not a valid channel name or number. Valid channels are:");
-  	fda_print("say, emote, yell, party, raid, raid_warning, guild, officer, 1-9. '0' to disable the message.");
+  	fda_Print("'" .. msg .. "' is not a valid channel name or number. Valid channels are:");
+  	fda_Print("say, emote, yell, party, raid, raid_warning, guild, officer, 1-9. '0' to disable the message.");
   	return
   end
 end
 
 function fda_WMessageSet(msg)
-	fda_print("whisper message changed to: " .. strsub(msg, 4));
+	fda_Print("whisper message changed to: " .. strsub(msg, 4));
 	fdalert_Prefs.whispermessage = strsub(msg, 4);
   return
 end
 
 function fda_WTargetSet(msg)
-	fda_print("whisper target changed to: " .. strsub(msg, 4));
+	fda_Print("whisper target changed to: " .. strsub(msg, 4));
 	fdalert_Prefs.whispertarget = strsub(msg, 4);
   return
 end
@@ -352,11 +319,11 @@ end
 -- v CGN v --
 function fda_TallyToggle()
 	if (fdalert_Prefs.tally == "off") then
-		fda_print("tallying enabled");
+		fda_Print("tallying enabled");
 		fdalert_Prefs.tally = "on";
 		return
 	else
-		  fda_print("tally disabled");
+		  fda_Print("tally disabled");
 		fdalert_Prefs.tally = "off";
 	end
 end
@@ -364,42 +331,42 @@ end
 function fda_DebugToggle()
 	if (fdalert_Prefs.debug == "off") then
 		fdalert_Prefs.debug = "on";
-		fda_debug_print("debug enabled");
+		fda_DebugPrint("debug enabled");
 		return
 	else
-		fda_print("debug disabled");
+		fda_Print("debug disabled");
 		fdalert_Prefs.debug = "off";
 	end
 end
 -- ^ CGN ^ --
 
 function fda_Status()
-	fda_print("current mod settings:");
-	fda_print("/fda enable = " .. tostring(fdalert_Prefs.enabled));
-	fda_print("/fda message = " .. tostring(fdalert_Prefs.message));
-	fda_print("/fda chan = " .. string.lower(tostring(fdalert_Prefs.channel)));
-	fda_print("/fda wm = " .. tostring(fdalert_Prefs.whispermessage));
-	fda_print("/fda wt = " .. tostring(fdalert_Prefs.whispertarget));
-	fda_print("/fda sound = " .. tostring(fdalert_Prefs.sound));
-	fda_print("/fda tally = " .. tostring(fdalert_Prefs.tally));
+	fda_Print("current mod settings:");
+	fda_Print("/fda enable = " .. tostring(fdalert_Prefs.enabled));
+	fda_Print("/fda message = " .. tostring(fdalert_Prefs.message));
+	fda_Print("/fda chan = " .. string.lower(tostring(fdalert_Prefs.channel)));
+	fda_Print("/fda wm = " .. tostring(fdalert_Prefs.whispermessage));
+	fda_Print("/fda wt = " .. tostring(fdalert_Prefs.whispertarget));
+	fda_Print("/fda sound = " .. tostring(fdalert_Prefs.sound));
+	fda_Print("/fda tally = " .. tostring(fdalert_Prefs.tally));
 end
 
 function fda_ShowHelp()
-	fda_print("help:")
-	fda_print("/fda help  = brings up this help list")
-	fda_print("/fda enable  = toggles the mod on/off")
-	fda_print("/fda message <message>  = sets the message that will be sent to the channel")
-	fda_print("/fda chan <channel>  = sets the channel that the message will be sent to. Valid chat channels: say, emote, yell, party, raid, raid_warning, guild, officer, and the channel numbers 1 to 9. Set to '0' to disable channel messages.")
-	fda_print("/fda wm <whisper message>  = sets the message that will be sent in whispers")
-	fda_print("/fda wt <name>  = sets the target for the whisper. Set to '0' to disable whisper messages.")
-	fda_print("/fda sound <number>  = selects a sound. Valid choices are 1-10. Set to '0' to disable sound.")
-	fda_print("/fda tally  = Changes whether FDA will tally your resists.")
-	fda_print("/fda test  = simulates an FD resist based on your current settings")
-	fda_print("/fda status  = displays your current FD Alert configuration")
-	fda_print("/fda reset  = resets all settings back to their default state")
+	fda_Print("help:")
+	fda_Print("/fda help  = brings up this help list")
+	fda_Print("/fda enable  = toggles the mod on/off")
+	fda_Print("/fda message <message>  = sets the message that will be sent to the channel")
+	fda_Print("/fda chan <channel>  = sets the channel that the message will be sent to. Valid chat channels: say, emote, yell, party, raid, raid_warning, guild, officer, and the channel numbers 1 to 9. Set to '0' to disable channel messages.")
+	fda_Print("/fda wm <whisper message>  = sets the message that will be sent in whispers")
+	fda_Print("/fda wt <name>  = sets the target for the whisper. Set to '0' to disable whisper messages.")
+	fda_Print("/fda sound <number>  = selects a sound. Valid choices are 1-10. Set to '0' to disable sound.")
+	fda_Print("/fda tally  = Changes whether FDA will tally your resists.")
+	fda_Print("/fda test  = simulates an FD resist based on your current settings")
+	fda_Print("/fda status  = displays your current FD Alert configuration")
+	fda_Print("/fda reset  = resets all settings back to their default state")
 end
 
 function fda_ResetSettings()
-	fda_print("settings have been reset to default values, type '/fda status' to check settings");
+	fda_Print("settings have been reset to default values, type '/fda status' to check settings");
 	fda_Defaults()
 end
