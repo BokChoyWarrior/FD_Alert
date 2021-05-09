@@ -1,7 +1,7 @@
 ## Interface: 20400
 ## Title: FD Alert
 ## Version: 1.1.3
-## Author: Intermission of Frostmourne-US, modified by CGN
-## Notes: Creates custom chat messages and sounds on Feign Death resists.
+## Author: Intermission of Frostmourne-US, modified by BokChoyWarrior
+## Notes: Announces and plays sounds when feign death resists.
 ## SavedVariablesPerCharacter: fdalert_Prefs
 fdalert.xml
