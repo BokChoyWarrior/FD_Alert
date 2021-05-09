@@ -3,9 +3,9 @@
 # FD Alert
 
 This addon gives alerts when your Feign Death resists. 
-- Sends a custom message to a chat channel (say, yell, raid)
-- Sends a custom message via whisper to any name
+- Sends a custom message to a chat channel (say, yell, raid etc.)
 - Plays a sound of your choice
+- Tracks your resists per fight
 
 ### Guide
 FD Alert uses a few slash commands to configure. By default it sends a message in /say, plays a bell sound, and does not send any whispers. You can change the messages (both channel and whisper messages can be different), and change which channel they send to or which person they whisper. The sound alert can be changed to one of 10 built in sounds, or any sound in the WoW files.
@@ -31,7 +31,7 @@ which would equate to
 
 (Just for you lazy people out there)
 
-**FD Alert has 10 sounds built in, but you can use any WoW sound you like by editing the saved variables folder, found in: WoW\WTF\Account\<account>\<server>\<character>\SavedVariables\FD_Alert.lua
+**FD Alert has 10 sounds built in, but you can use any WoW sound you like by editing the saved variables folder, found in: WoW\WTF\Account\\<account>\\<server>\\<character>\SavedVariables\FD_Alert.lua
 
 A WoW sound list can be found at http://www.wowwiki.com/API_PlaySoundFile_SoundList (warning, there are thousands of them. I just picked 10 random ones that sounded decent for the mod)
 
