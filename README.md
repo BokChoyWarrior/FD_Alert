@@ -63,4 +63,4 @@ You can turn off the channel messages or sound alert by setting them to "0".
 - release, it works.
 ----------------------------------
 Original by Intermission, on Frostmourne-US
-Modernised by CGN - https://github.com/BokChoyWarrior
+Modernised by CGN - https://github.com/BokChoyWarrior or Gucci#4945 on Discord
