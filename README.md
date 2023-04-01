@@ -2,6 +2,10 @@
 
 # FD Alert
 
+### Installation
+Download the latest release and rename the extracted folder from `FD_Alert-x.y.z` -> `FD_Alert` before placing in your addons folder.
+
+### Overview
 This addon gives alerts when your Feign Death resists. 
 - Sends a custom message to a chat channel (say, yell, raid etc.)
 - Plays a sound of your choice
